@@ -1,14 +1,19 @@
 # Instructions for this test:
 # 1. Please clone this gist as a git repo locally
-# 2. Create your own github repo called 'rubytest' (or a name of your choice) and add this repo as a new remote to the cloned repo
-# 3. Edit this file to answer the questions, and push this file with answers back out to your own 'rubytest' repo.
+# 2. Create your own github repo called 'rubytest' (or a name of your choice)
+#    and add this repo as a new remote to the cloned repo
+# 3. Edit this file to answer the questions, and push this file with answers
+#    back out to your own 'rubytest' repo.
 
-# Problem 1. Explain briefly what this code does, fix any bugs, then clean it up however you
-# like and write a unit test using RSpec.
+# Problem 1. Explain briefly what this code does, fix any bugs, then clean it
+# up however you like and write a unit test using RSpec.
 
-# This function takes a collections (array or range) and returns a string representation in the format of an array.
-# It's like a function for pretty-printing collections into array format.
-# It could be used for serializing a collection of data and storing it in a file or a database.
+####################################################################
+# This function takes a collections (array or range) and returns a string
+# representation in the format of an array. It's like a function for
+# pretty-printing collections into array format. It could be used for
+# serializing a collection of data and storing it in a file or a database.
+####################################################################
 def bracketed_list(values)
  temp = values.inject("["){|result, val| result + "#{val.to_s}, "}
  temp = temp.rstrip().chop()
