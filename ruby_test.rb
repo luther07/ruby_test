@@ -83,11 +83,15 @@ end
 class CarsController
  def start_engine
   @car = Car.first # bonus: there is a bug here. what is it?
+  # bug is that only the first car returned from the database will be started.
+  # the start_engine method should have a condition for matching an id
+  # parameter. Currently it will always start whichever car the database
+  # returns as the first car.
   @car.start_engine
  end
 end
 
-class Car
+class Car < ActiveRecord::Base
  def start_engine
   api_url = "http://my.cars.com/start_engine?id={self.id}"
   RestClient.post api_url
@@ -95,6 +99,14 @@ class Car
 end
 
 # 3a. Explain what possible problems could arise when a user hits this code.
+
+####################################################################
+# Since start_engine is a class method, two different workers could
+# assign api_url at the same time and one assignment would get lost
+# and the same car would get started by both workers. In other words,
+# the statements in Car's start_engine method could be interleaved
+####################################################################
+
 # 3b. Imagine now that we have changed the implementation:
 
 class CarsController
@@ -123,9 +135,18 @@ end
 #
 # Example: user 'x' will take about 30 seconds. What about y,z1,z2,z3?
 #
+# user 'y' will take about 40 seconds.
+# user 'z1' will take about 45 seconds.
+# user 'z2' will take about 50 seconds.
+# user 'z3' will take about 55 seconds.
+#
 # Approximately how many requests/second can your cluster process for the action 'start_engine'? What about 'drive_away'?
 # What could you do to increase the throughput (requests/second)?
-
+#
+# 'start_engine' can process about 0.033 requests per second.
+# 'drive_away' can process 0.10 requests per second.
+# To increase throughput, we could program these delays on the front-end (view)
+# using javascript and maybe AJAX, instead of in the controller.
 
 # Problem 4. Here's a piece of code to feed my pets. Please clean it up as you see fit.
 
