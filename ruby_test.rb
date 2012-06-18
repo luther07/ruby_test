@@ -210,9 +210,23 @@ class ArticlesController < ApplicationController
 end
 
 class Article < ActiveRecord::Base
+
 end
 
 # Problem 6. Explain in a few sentences the difference between a ruby Class and Module and when it's appropriate to use either one.
+
+####################################################################
+# A ruby class is like a class in any OOP language, while a module
+# contains method and constant definitions, some of which can be
+# called from any piece of code. Other module components can
+# be mixed-into a class. Modules serve two purposes: they can package
+# related methods and constants for easy access from any code. They can
+# also be mixed into a class to conveniently add functionality. Classes
+# are best for defining the main types in your domain. Modules are best
+# for packaging stand-alone definitions and generalized definitions that
+# can be useful to multiple classes, when mixed-in.
+####################################################################
+
 
 # Problem 7. Explain the problem with this code
 
