@@ -31,9 +31,24 @@ end
 # Point out any bugs or security problems in the code, fix them, and refactor the code to
 # make it cleaner. Hint: think 'fat model, skinny controller'. Explain in a few sentences
 # what 'fat model, skinny controller' means.
+
+####################################################################
+# There is a security problem, because we are not escaping the
+# :name and :user_id parameters. The values of these parameters
+# will be used in a database query. Given that the parameters likely
+# came from a user, we should escape them to prevent SQL injection attacks.
+#
+# 'fat model, skinny controller' means that we should prefer pushing code into
+# the model rather than an individual controller. Code in a controller can only
+# be used by that controller, but code in the model can be used by any
+# controller.
+# This rule of thumb aids in code re-use and keeping controllers simpler and
+# easier to read.
+####################################################################
 class CarsController
  def break_random_wheel
-   @car = Car.find(:first, :conditions => "name = '#{params[:name]}' and user='#{params[:user_id]}'")
+   @car = Car.find(:first, :conditions =>
+      ['name = ? AND user = ?', '#{params[:name]}', '#{params[:user_id]}'])
    @wheels = @car.components.find(:all, :conditions => "type = 'wheel'")
    random_wheel =  (rand*4).round
    @wheels[random_wheel].break!
@@ -43,6 +58,13 @@ end
 
 class Car < ActiveRecord::Base
  has_many :components
+ def find_car
+   # class method that replaces call to Car.find in CarsController
+
+ end
+ def find_wheel
+   # instance method that replaces call to car.components.find
+ end
 end
 
 class User < ActiveRecord::Base
