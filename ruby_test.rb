@@ -38,6 +38,10 @@ end
 # will be used in a database query. Given that the parameters likely
 # came from a user, we should escape them to prevent SQL injection attacks.
 #
+# Also, there was a bug in the code where it was using single quotes with a
+# ruby expression inside the quotes. You must use double quotes in order to
+# include a ruby expression inside the quotes.
+#
 # 'fat model, skinny controller' means that we should prefer pushing code into
 # the model rather than an individual controller. Code in a controller can only
 # be used by that controller, but code in the model can be used by any
@@ -47,9 +51,8 @@ end
 ####################################################################
 class CarsController
  def break_random_wheel
-   @car = Car.find(:first, :conditions =>
-      ['name = ? AND user = ?', '#{params[:name]}', '#{params[:user_id]}'])
-   @wheels = @car.components.find(:all, :conditions => "type = 'wheel'")
+   @car = Car.find_car
+   @wheels = @car.find_wheels
    random_wheel =  (rand*4).round
    @wheels[random_wheel].break!
    @car.functioning_wheels -= 1
@@ -58,12 +61,16 @@ end
 
 class Car < ActiveRecord::Base
  has_many :components
- def find_car
+ def self.find_car
    # class method that replaces call to Car.find in CarsController
+   self.find(:first, conditions =>
+      ['name = ? AND user = ?', "#{params[:name]}", "#{params[:user_id]}"])
 
  end
- def find_wheel
+ def find_wheels
    # instance method that replaces call to car.components.find
+   car = self.find_car
+   wheels = @car.components.find(:all, :conditions => "type = 'wheel'")
  end
 end
 
