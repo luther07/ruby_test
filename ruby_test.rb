@@ -154,14 +154,14 @@ cat = Cat.new
 dog = Dog.new
 cow = Cow.new
 my_pets = [cat, dog, cow, ]
+my_pet_food = [:milk, :dogfood, :grass, ]
+feed_pets(my_pets, my_pet_food)
 
-my_pets.each do |pet|
- if pet.is_a?(Cat)
-   pet.feed(:milk)
- elsif pet.is_a?(Cow)
-   pet.feed(:grass)
- elsif pet.is_a?(Dog)
-   pet.feed(:dogfood)
+def feed_pets(pets, food)
+ pets.each do |pet|
+   food.each do |food|
+     pet.feed(food)
+   end
  end
 end
 
@@ -172,12 +172,33 @@ class Pet
 end
 
 class Cat < Pet
+ def feed(food)
+   if (food == :milk)
+     puts "yummy milk"
+   else
+     puts "yuck, I won't eat that"
+   end
+ end
 end
 
 class Dog < Pet
+ def feed(food)
+   if (food == :dogfood)
+     puts "yummy dogfood"
+   else
+     puts "yuck, I won't eat that"
+   end
+ end
 end
 
 class Cow < Pet
+ def feed(food)
+   if (food == :grass)
+     puts "yummy grass"
+   else
+     puts "yuck, I won't eat that"
+   end
+ end
 end
 
 # Problem 5. Improve this code
