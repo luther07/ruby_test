@@ -230,6 +230,16 @@ end
 
 # Problem 7. Explain the problem with this code
 
+####################################################################
+# Method 'find(:all)' will return an array of objects.
+# Calling the select method on the array of objects passing in the code
+# block below, only the records that return true should be in the final
+# result array.
+# From my point of view, it's preferable to work with ActiveRelations
+# instead of an array of User objects. Any problems arise because
+# we're working with an array of objects instead of an ActiveRelation.
+####################################################################
+
 class UsersController
  def find_active_users
   User.find(:all).select {|user| user.active?}
@@ -238,15 +248,19 @@ end
 
 # Problem 8. Explain what's wrong with this code and fix it. (Hint: named_scope)
 
+####################################################################
+#
+####################################################################
+
 class User < ActiveRecord::Base
  has_many :cars
 
  def red_cars
-  cars.scoped(:color => :red)
+  cars.scoped(:color, :conditions => ["color = ?"], 'red')
  end
 
  def green_cars
-  cars.scoped(:color => :green)
+  cars.scoped(:color, :conditions => ["color = ?"], 'green')
  end
 end
 
