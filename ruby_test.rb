@@ -202,14 +202,23 @@ class Cow < Pet
 end
 
 # Problem 5. Improve this code
+# I'm not sure understand what the equivalent SQL for this would be.
+# I'm guessing that method find_all_by_state is a method that returns all
+# records, ordered by the name of Article::STATES.
+# Then we're adding a condition that published is true.
+# Finally we are doing a second ordering by field 'created_at', in descending
+# order.
 
 class ArticlesController < ApplicationController
  def index
-  @articles = Article.find_all_by_state(Article::STATES[:published], :order => "created_at DESC")
+  @articles = Article.published.find_all_by_state
  end
 end
 
 class Article < ActiveRecord::Base
+  named_scope :published, conditions => ["published = ?", true]
+  def find_all_by_state
+    self.order("STATES, created_at DESC")
 
 end
 
@@ -249,19 +258,13 @@ end
 # Problem 8. Explain what's wrong with this code and fix it. (Hint: named_scope)
 
 ####################################################################
-#
+# The code wasn't defining the conditions. I believe
 ####################################################################
 
 class User < ActiveRecord::Base
  has_many :cars
-
- def red_cars
-  cars.scoped(:color, :conditions => ["color = ?"], 'red')
- end
-
- def green_cars
-  cars.scoped(:color, :conditions => ["color = ?"], 'green')
- end
+  named_scope :red_cars, :conditions => ["color = ?", 'red']
+  named_scope :green_cars, :conditions => ["color = ?", 'green']
 end
 
 class Car < ActiveRecord::Base
